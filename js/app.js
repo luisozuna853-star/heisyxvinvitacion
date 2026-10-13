@@ -356,25 +356,15 @@
   $("btnFirmar").addEventListener("click", firmar);
   $("inNombre").addEventListener("keydown", e => { if (e.key === "Enter") firmar(); });
 
-  /* ---------- Foto de la confirmación firmada ---------- */
-  let fotoArchivo = null, fotoURL = null, fotoPNG = null, fotoNombre = "", fotoNombreArchivo = "confirmacion-xv.jpg";
-  function cargarImg(src) {
-    return new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
-  }
-  function textoEspaciado(x, txt, cx, y, esp) {
-    if ("letterSpacing" in x) { x.letterSpacing = esp + "px"; x.fillText(txt, cx + esp / 2, y); x.letterSpacing = "0px"; return; }
-    x.fillText(txt.split("").join(String.fromCharCode(8202)), cx, y);
-  }
-  // Dibuja la misma tarjeta de confirmación que se ve en la página, ya firmada
-  async function crearFoto(f) {
-    try {
-      await Promise.all([
-        document.fonts.load('100px "Pinyon Script"'),
-        document.fonts.load('400 34px "Cormorant Garamond"'),
-        document.fonts.load('600 34px "Cormorant Garamond"'),
-        document.fonts.load('italic 30px "Cormorant Garamond"')
-      ]);
-    } catch (e) {}
+  /* ---------- Foto de la firma que se adjunta al mensaje ---------- */
+  // Se precargan la flor y las tipografías para poder dibujar la foto al instante al tocar "Firmar y enviar"
+  const florTarjeta = new Image();
+  florTarjeta.src = FLORES.f15;
+  try {
+    ['100px "Pinyon Script"', '400 34px "Cormorant Garamond"', '600 34px "Cormorant Garamond"', 'italic 30px "Cormorant Garamond"']
+      .forEach(fu => document.fonts.load(fu));
+  } catch (e) {}
+  function crearFoto(f) {
     const W = 1200, H = 1040, c = document.createElement("canvas");
     c.width = W; c.height = H;
     const x = c.getContext("2d");
@@ -433,8 +423,8 @@
     x.fillText("Asistencia", 0, -4); x.fillText("confirmada", 0, 24);
     x.restore();
     // Flores en la esquina, como en la página
-    const flor = await cargarImg(FLORES.f15);
-    if (flor) {
+    const flor = florTarjeta;
+    if (flor.complete && flor.naturalWidth) {
       const fw = 230, fh = fw * flor.height / flor.width;
       x.save(); x.translate(cx + cw - 30, cy - 10); x.rotate(18 * Math.PI / 180);
       x.shadowColor = "rgba(2,8,34,.35)"; x.shadowBlur = 16; x.shadowOffsetY = 8;
@@ -442,72 +432,30 @@
     }
     return c;
   }
-  async function prepararFoto(f) {
-    let lienzo;
-    try { lienzo = await crearFoto(f); } catch (e) { return; }
-    const jpg = await new Promise(r => lienzo.toBlob(r, "image/jpeg", .93));
-    const png = await new Promise(r => lienzo.toBlob(r, "image/png"));
-    if (!jpg) return;
-    if (fotoURL) URL.revokeObjectURL(fotoURL);
-    fotoURL = URL.createObjectURL(jpg);
-    fotoPNG = png;
-    const nombreArchivo = "confirmacion-xv-" + f.nombre.toLowerCase().replace(/[^a-z0-9áéíóúñü]+/gi, "-") + ".jpg";
-    try { fotoArchivo = new File([jpg], nombreArchivo, { type: "image/jpeg" }); } catch (e) { fotoArchivo = null; }
-    fotoNombre = f.nombre; fotoNombreArchivo = nombreArchivo;
+  function dataURLaBlob(url) {
+    const [cab, datos] = url.split(","), bin = atob(datos), n = bin.length, arr = new Uint8Array(n);
+    for (let k = 0; k < n; k++) arr[k] = bin.charCodeAt(k);
+    return new Blob([arr], { type: cab.slice(5, cab.indexOf(";")) });
   }
-  function puedeCompartir() {
-    try { return !!(fotoArchivo && navigator.canShare && navigator.canShare({ files: [fotoArchivo] })); } catch (e) { return false; }
-  }
-  function esComputadora() { return !matchMedia("(pointer: coarse)").matches; }
-  // Muestra la tarjeta firmada dentro de la página para enviarla cuando el envío automático no fue posible
-  function mostrarParaCompartir(nombre, conBoton) {
-    const caja = $("compartirTarjeta");
-    $("tarjetaImg").src = fotoURL || "";
-    $("btnCompartirTarjeta").hidden = !conBoton;
-    $("btnCompartirTarjeta").onclick = () => enviarConfirmacion(nombre);
-    $("compartirAyuda").textContent = conBoton
-      ? "Toca el botón y elige WhatsApp: tu tarjeta firmada se envía junto con el mensaje."
-      : (esComputadora()
-          ? "Tu tarjeta firmada quedó copiada: en el chat de WhatsApp que se abrió, pégala con Ctrl + V y envíala junto al mensaje."
-          : "Este navegador no permite adjuntar la imagen sola. Mantén presionada tu tarjeta y elige Compartir → WhatsApp, o ábrela en Chrome o Safari.");
-    caja.hidden = false;
-  }
+  // Abre WhatsApp con el mensaje y la foto de la firma adjunta
   function enviarConfirmacion(nombre) {
     const texto = mensajeConfirmacion(nombre);
-    const listo = fotoArchivo && fotoNombre === nombre;
-    // 1) Tarjeta lista: se abre WhatsApp con la tarjeta firmada y el mensaje juntos
-    if (listo && puedeCompartir()) {
-      navigator.share({ files: [fotoArchivo], text: texto })
-        .then(() => { $("compartirTarjeta").hidden = true; })
-        .catch(err => { if (!err || err.name !== "AbortError") mostrarParaCompartir(nombre, true); });
-      return;
-    }
-    // 2) La tarjeta aún se está creando: se termina y se ofrece enviarla
-    if (!listo) {
-      prepararFoto({ nombre, fecha: hoyTexto() }).then(() => {
-        if (puedeCompartir()) mostrarParaCompartir(nombre, true);
-        else enviarSinArchivos(nombre);
+    let archivo = null;
+    try {
+      const lienzo = crearFoto({ nombre, fecha: hoyTexto() });
+      const blob = dataURLaBlob(lienzo.toDataURL("image/jpeg", .92));
+      archivo = new File([blob], "firma-" + nombre.toLowerCase().replace(/[^a-z0-9áéíóúñü]+/gi, "-") + ".jpg", { type: "image/jpeg" });
+    } catch (e) { archivo = null; }
+    let puede = false;
+    try { puede = !!(archivo && navigator.canShare && navigator.canShare({ files: [archivo] })); } catch (e) {}
+    if (puede) {
+      navigator.share({ files: [archivo], text: texto }).catch(err => {
+        if (!err || err.name !== "AbortError") window.open(urlConfirmacion(nombre), "_blank", "noopener");
       });
       return;
     }
-    // 3) El navegador no deja compartir imágenes
-    enviarSinArchivos(nombre);
-  }
-  function enviarSinArchivos(nombre) {
-    if (fotoPNG && navigator.clipboard && window.ClipboardItem) {
-      navigator.clipboard.write([new ClipboardItem({ "image/png": fotoPNG })]).catch(() => {});
-    }
-    mostrarParaCompartir(nombre, false);
     window.open(urlConfirmacion(nombre), "_blank", "noopener");
   }
-  // La hoja se prepara mientras la persona escribe su nombre, para enviarla al instante al firmar
-  let temporizadorFoto = null;
-  $("inNombre").addEventListener("input", () => {
-    clearTimeout(temporizadorFoto);
-    const nombre = $("inNombre").value.trim().replace(/\s+/g, " ");
-    if (nombre.length < 2) return;
-    temporizadorFoto = setTimeout(() => prepararFoto({ nombre, fecha: hoyTexto() }), 120);
-  });
   function hoyTexto() { return new Date().toLocaleDateString("es-DO", { day: "numeric", month: "long", year: "numeric" }); }
 
   function mostrarFirma(f, conAnimacion) {
@@ -524,9 +472,7 @@
     $("firma").hidden = false;
     $("gracias").hidden = false;
     wa.hidden = false;
-    if (fotoNombre !== f.nombre) prepararFoto(f);
     wa.onclick = e => { e.preventDefault(); enviarConfirmacion(f.nombre); };
-    if (!conAnimacion) $("compartirTarjeta").hidden = true;
     if (conAnimacion && animar) {
       g.timeline()
         .fromTo("#firmaNombre", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 1.9, ease: "power1.inOut" })
