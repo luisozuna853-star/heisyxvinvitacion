@@ -19,7 +19,11 @@ nombre, padres, fecha, fechaISO (cuenta regresiva), hora, dirección, número de
 1. Sube estos archivos a un repositorio.
 2. En el repositorio: **Settings → Pages**.
 3. En "Build and deployment", elige **Deploy from a branch**, rama `main`, carpeta `/ (root)` y guarda.
-4. En uno o dos minutos la invitación queda en `https://TU-USUARIO.github.io/NOMBRE-DEL-REPO/`.
+4. En uno o dos minutos la invitación queda en https://luisozuna853-star.github.io/heisyxvinvitacion/
+
+## Vista previa al compartir el enlace
+`portada.jpg` es la imagen que aparece cuando se manda el enlace por WhatsApp.
+Enlace de la invitación: https://luisozuna853-star.github.io/heisyxvinvitacion/
 
 ## Notas
 - Es un solo archivo: estilos, código e imágenes van dentro de `index.html`.

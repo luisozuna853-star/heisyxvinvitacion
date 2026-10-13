@@ -3,7 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mis XV años</title>
+<title>Mis XV años · Heisy Jireh</title>
+<meta name="description" content="Te invito a mis XV años. Sábado 7 de noviembre de 2026, 7:00 p. m. Toca para abrir tu invitación.">
+<!-- Vista previa al compartir el enlace (WhatsApp, Facebook, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mis XV años">
+<meta property="og:title" content="Te invito a mis XV años · Heisy Jireh">
+<meta property="og:description" content="Sábado 7 de noviembre de 2026, 7:00 p. m. Toca para abrir tu invitación.">
+<meta property="og:url" content="https://luisozuna853-star.github.io/heisyxvinvitacion/">
+<meta property="og:image" content="https://luisozuna853-star.github.io/heisyxvinvitacion/portada.jpg">
+<meta property="og:image:secure_url" content="https://luisozuna853-star.github.io/heisyxvinvitacion/portada.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Invitación a los XV años de Heisy Jireh">
+<meta property="og:locale" content="es_DO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://luisozuna853-star.github.io/heisyxvinvitacion/portada.jpg">
+<meta name="theme-color" content="#0b1a52">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet">
@@ -943,7 +960,7 @@
   $("inNombre").addEventListener("keydown", e => { if (e.key === "Enter") firmar(); });
 
   /* ---------- Foto de la confirmación firmada ---------- */
-  let fotoArchivo = null, fotoURL = null, fotoNombre = "", fotoNombreArchivo = "confirmacion-xv.jpg";
+  let fotoArchivo = null, fotoURL = null, fotoPNG = null, fotoNombre = "", fotoNombreArchivo = "confirmacion-xv.jpg";
   function cargarImg(src) {
     return new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
   }
@@ -951,107 +968,111 @@
     if ("letterSpacing" in x) { x.letterSpacing = esp + "px"; x.fillText(txt, cx + esp / 2, y); x.letterSpacing = "0px"; return; }
     x.fillText(txt.split("").join(String.fromCharCode(8202)), cx, y);
   }
+  // Dibuja la misma tarjeta de confirmación que se ve en la página, ya firmada
   async function crearFoto(f) {
     try {
       await Promise.all([
-        document.fonts.load('120px "Pinyon Script"'),
-        document.fonts.load('500 60px "Cormorant Garamond"'),
-        document.fonts.load('italic 40px "Cormorant Garamond"'),
-        document.fonts.load('600 40px "Cormorant Garamond"')
+        document.fonts.load('100px "Pinyon Script"'),
+        document.fonts.load('400 34px "Cormorant Garamond"'),
+        document.fonts.load('600 34px "Cormorant Garamond"'),
+        document.fonts.load('italic 30px "Cormorant Garamond"')
       ]);
     } catch (e) {}
-    const W = 1080, H = 1350, c = document.createElement("canvas");
+    const W = 1200, H = 1040, c = document.createElement("canvas");
     c.width = W; c.height = H;
     const x = c.getContext("2d");
     const serif = '"Cormorant Garamond", Georgia, serif', script = '"Pinyon Script", "Snell Roundhand", cursive';
-    // Fondo azul rey
-    const fondo = x.createRadialGradient(W / 2, H * .38, 60, W / 2, H * .45, H * .85);
-    fondo.addColorStop(0, "#24459f"); fondo.addColorStop(1, "#0b1a52");
+    // Fondo azul de la página
+    const fondo = x.createRadialGradient(W / 2, H * .4, 80, W / 2, H / 2, W * .8);
+    fondo.addColorStop(0, "#1b3690"); fondo.addColorStop(1, "#0d1e5c");
     x.fillStyle = fondo; x.fillRect(0, 0, W, H);
-    // Marco dorado
-    x.strokeStyle = "#c9a85e"; x.lineWidth = 3; x.strokeRect(38, 38, W - 76, H - 76);
-    x.lineWidth = 1.2; x.globalAlpha = .7; x.strokeRect(54, 54, W - 108, H - 108); x.globalAlpha = 1;
-    // Ramas de flores en dos esquinas
-    const rama = await cargarImg(FLORES.rama);
-    if (rama) {
-      const rw = 250, rh = rw * rama.height / rama.width;
-      x.save(); x.translate(-8, -8 + rh); x.scale(1, -1); x.drawImage(rama, 0, 0, rw, rh); x.restore();
-      x.save(); x.translate(W + 8, H + 8 - rh); x.scale(-1, 1); x.drawImage(rama, 0, 0, rw, rh); x.restore();
-    }
-    const oro = (y0, y1) => { const gr = x.createLinearGradient(0, y0, 0, y1); gr.addColorStop(0, "#efdfb2"); gr.addColorStop(.5, "#d1b16a"); gr.addColorStop(1, "#a7843d"); return gr; };
+    // Tarjeta marfil
+    const cx = 110, cy = 150, cw = W - 220, ch = 820;
+    x.save(); x.shadowColor = "rgba(0,0,0,.45)"; x.shadowBlur = 60; x.shadowOffsetY = 26;
+    x.fillStyle = "#fffdf8"; x.fillRect(cx, cy, cw, ch); x.restore();
+    x.strokeStyle = "#b8954a"; x.lineWidth = 2.2; x.strokeRect(cx + 18, cy + 18, cw - 36, ch - 36);
+    x.strokeStyle = "rgba(184,149,74,.5)"; x.lineWidth = 1.6; x.strokeRect(cx + 27, cy + 27, cw - 54, ch - 54);
+    // Esquineros dorados
+    const esquina = (ex, ey, sx, sy) => {
+      x.save(); x.translate(ex, ey); x.scale(sx * 1.5, sy * 1.5);
+      x.strokeStyle = "#b8954a"; x.lineWidth = 1.3 / 1.5;
+      x.beginPath(); x.moveTo(2, 44); x.lineTo(2, 10); x.quadraticCurveTo(2, 2, 10, 2); x.lineTo(44, 2); x.stroke();
+      x.globalAlpha = .7; x.lineWidth = .8 / 1.5;
+      x.beginPath(); x.moveTo(8, 38); x.lineTo(8, 14); x.quadraticCurveTo(8, 8, 14, 8); x.lineTo(38, 8); x.stroke();
+      x.globalAlpha = 1; x.fillStyle = "#b8954a"; x.beginPath(); x.arc(14, 14, 2.2, 0, Math.PI * 2); x.fill();
+      x.restore();
+    };
+    esquina(cx + 36, cy + 36, 1, 1); esquina(cx + cw - 36, cy + 36, -1, 1);
+    esquina(cx + 36, cy + ch - 36, 1, -1); esquina(cx + cw - 36, cy + ch - 36, -1, -1);
     x.textAlign = "center"; x.textBaseline = "alphabetic";
-    // Encabezado
-    x.fillStyle = "#e3cf9e"; x.font = "500 32px " + serif;
-    textoEspaciado(x, "CONFIRMACIÓN DE ASISTENCIA", W / 2, 190, 7);
-    x.fillStyle = oro(230, 430); x.font = "400 220px " + serif;
-    x.fillText("XV", W / 2, 420);
-    x.fillStyle = oro(450, 560); x.font = "110px " + script;
-    x.fillText(CONFIG.nombre, W / 2, 545);
-    x.fillStyle = "#f2ebdc"; x.font = "italic 38px " + serif;
-    x.fillText(CONFIG.fecha.charAt(0).toUpperCase() + CONFIG.fecha.slice(1) + ", " + CONFIG.hora, W / 2, 615);
-    // Tarjeta marfil con la firma
-    const tx = 130, ty = 675, tw = W - 260, th = 470;
-    x.shadowColor = "rgba(0,0,0,.35)"; x.shadowBlur = 40; x.shadowOffsetY = 18;
-    x.fillStyle = "#fffdf8"; x.fillRect(tx, ty, tw, th);
-    x.shadowColor = "transparent";
-    x.strokeStyle = "#b8954a"; x.lineWidth = 2; x.strokeRect(tx + 16, ty + 16, tw - 32, th - 32);
-    x.lineWidth = 1; x.globalAlpha = .5; x.strokeRect(tx + 24, ty + 24, tw - 48, th - 48); x.globalAlpha = 1;
-    x.fillStyle = "#575f82"; x.font = "italic 36px " + serif;
-    x.fillText("Firmado por", W / 2, ty + 105);
-    let tam = 120; x.font = tam + "px " + script;
-    while (x.measureText(f.nombre).width > tw - 140 && tam > 60) { tam -= 6; x.font = tam + "px " + script; }
-    x.fillStyle = "#0f2266"; x.fillText(f.nombre, W / 2, ty + 255);
-    x.strokeStyle = "#b8954a"; x.lineWidth = 2; x.beginPath(); x.moveTo(tx + 110, ty + 285); x.lineTo(tx + tw - 110, ty + 285); x.stroke();
-    x.fillStyle = "#575f82"; x.font = "italic 32px " + serif;
-    x.fillText("Confirmado el " + f.fecha, W / 2, ty + 345);
-    x.fillStyle = "#1c3a9c"; x.font = "600 30px " + serif;
-    textoEspaciado(x, "¡AHÍ ESTARÉ!", W / 2, ty + 405, 5);
-    // Sello dorado
-    x.save(); x.translate(tx + tw - 70, ty + 40); x.rotate(-12 * Math.PI / 180);
-    const sello = x.createRadialGradient(-25, -25, 10, 0, 0, 95);
-    sello.addColorStop(0, "#f2e1b0"); sello.addColorStop(.6, "#c9a85e"); sello.addColorStop(1, "#8d6e2e");
-    x.shadowColor = "rgba(0,0,0,.3)"; x.shadowBlur = 16; x.shadowOffsetY = 6;
-    x.fillStyle = sello; x.beginPath(); x.arc(0, 0, 90, 0, Math.PI * 2); x.fill();
-    x.shadowColor = "transparent";
-    x.strokeStyle = "rgba(255,243,196,.7)"; x.lineWidth = 2; x.beginPath(); x.arc(0, 0, 76, 0, Math.PI * 2); x.stroke();
-    x.fillStyle = "#0f2266"; x.font = "700 24px " + serif;
-    x.fillText("ASISTENCIA", 0, -4); x.fillText("CONFIRMADA", 0, 26);
+    // Título y texto
+    x.fillStyle = "#1c3a9c"; x.font = "96px " + script;
+    x.fillText("¿Me acompañas?", W / 2, cy + 175);
+    x.fillStyle = "#575f82"; x.font = "400 34px " + serif;
+    ["Firma tu invitación para confirmar tu", "asistencia. Se abrirá WhatsApp con tu", "mensaje listo para enviar."]
+      .forEach((l, i) => x.fillText(l, W / 2, cy + 250 + i * 46));
+    // Firma
+    let tam = 104; x.font = tam + "px " + script;
+    while (x.measureText(f.nombre).width > 600 && tam > 56) { tam -= 4; x.font = tam + "px " + script; }
+    x.fillStyle = "#0f2266"; x.fillText(f.nombre, W / 2, cy + 520);
+    x.strokeStyle = "#b8954a"; x.lineWidth = 2; x.beginPath(); x.moveTo(W / 2 - 330, cy + 548); x.lineTo(W / 2 + 330, cy + 548); x.stroke();
+    // "Firmado por Nombre · fecha" con el nombre resaltado
+    const partes = [["italic 30px " + serif, "#575f82", "Firmado por "], ["600 30px " + serif, "#1a2550", f.nombre], ["italic 30px " + serif, "#575f82", " · " + f.fecha]];
+    let total = 0; partes.forEach(([fo, , t]) => { x.font = fo; total += x.measureText(t).width; });
+    let px = W / 2 - total / 2; x.textAlign = "left";
+    partes.forEach(([fo, col, t]) => { x.font = fo; x.fillStyle = col; x.fillText(t, px, cy + 602); px += x.measureText(t).width; });
+    x.textAlign = "center";
+    // Agradecimiento
+    x.fillStyle = "#1a2550"; x.font = "400 36px " + serif;
+    x.fillText("¡Gracias, " + f.nombre.split(" ")[0] + "! Tu lugar está reservado.", W / 2, cy + 690);
+    x.fillStyle = "#1c3a9c"; x.font = "italic 30px " + serif;
+    x.fillText(CONFIG.fecha.charAt(0).toUpperCase() + CONFIG.fecha.slice(1) + ", " + CONFIG.hora, W / 2, cy + 745);
+    // Sello "Asistencia confirmada"
+    x.save(); x.translate(W / 2 + 330, cy + 455); x.rotate(-12 * Math.PI / 180);
+    x.fillStyle = "#fffdf8"; x.beginPath(); x.arc(0, 0, 76, 0, Math.PI * 2); x.fill();
+    x.strokeStyle = "#1c3a9c"; x.lineWidth = 2.6; x.beginPath(); x.arc(0, 0, 76, 0, Math.PI * 2); x.stroke();
+    x.lineWidth = 1.4; x.beginPath(); x.arc(0, 0, 67, 0, Math.PI * 2); x.stroke();
+    x.fillStyle = "#1c3a9c"; x.font = "600 25px " + serif;
+    x.fillText("Asistencia", 0, -4); x.fillText("confirmada", 0, 24);
     x.restore();
-    // Pie
-    x.fillStyle = "#e3cf9e"; x.font = "italic 34px " + serif;
-    x.fillText("Te espero en el País de las Maravillas", W / 2, H - 120);
-    return new Promise(res => c.toBlob(b => res(b), "image/jpeg", .92));
+    // Flores en la esquina, como en la página
+    const flor = await cargarImg(FLORES.f15);
+    if (flor) {
+      const fw = 230, fh = fw * flor.height / flor.width;
+      x.save(); x.translate(cx + cw - 30, cy - 10); x.rotate(18 * Math.PI / 180);
+      x.shadowColor = "rgba(2,8,34,.35)"; x.shadowBlur = 16; x.shadowOffsetY = 8;
+      x.drawImage(flor, -fw / 2, -fh / 2, fw, fh); x.restore();
+    }
+    return c;
   }
   async function prepararFoto(f) {
-    const blob = await crearFoto(f);
-    if (!blob) return;
+    const lienzo = await crearFoto(f);
+    const jpg = await new Promise(r => lienzo.toBlob(r, "image/jpeg", .93));
+    const png = await new Promise(r => lienzo.toBlob(r, "image/png"));
+    if (!jpg) return;
     if (fotoURL) URL.revokeObjectURL(fotoURL);
-    fotoURL = URL.createObjectURL(blob);
+    fotoURL = URL.createObjectURL(jpg);
+    fotoPNG = png;
     const nombreArchivo = "confirmacion-xv-" + f.nombre.toLowerCase().replace(/[^a-z0-9áéíóúñü]+/gi, "-") + ".jpg";
-    try { fotoArchivo = new File([blob], nombreArchivo, { type: "image/jpeg" }); } catch (e) { fotoArchivo = null; }
+    try { fotoArchivo = new File([jpg], nombreArchivo, { type: "image/jpeg" }); } catch (e) { fotoArchivo = null; }
     fotoNombre = f.nombre; fotoNombreArchivo = nombreArchivo;
   }
   function enviarConfirmacion(nombre) {
     const texto = mensajeConfirmacion(nombre);
     const ayuda = $("fotoAyuda");
     const listo = fotoArchivo && fotoNombre === nombre;
-    // En el teléfono: se comparte la hoja firmada junto con el mensaje en un solo paso
+    // Teléfono: la tarjeta firmada y el mensaje se mandan juntos a WhatsApp
     if (listo && navigator.canShare && navigator.canShare({ files: [fotoArchivo] })) {
-      navigator.share({ files: [fotoArchivo], text: texto }).then(() => {
-        ayuda.hidden = true;
-      }).catch(err => {
-        if (err && err.name === "AbortError") return;
-        window.open(urlConfirmacion(nombre), "_blank", "noopener");
-      });
+      navigator.share({ files: [fotoArchivo], text: texto }).then(() => { ayuda.hidden = true; })
+        .catch(err => { if (!err || err.name !== "AbortError") window.open(urlConfirmacion(nombre), "_blank", "noopener"); });
       return;
     }
-    // Computadora o navegador sin esa función: se descarga la hoja y se abre el chat con el mensaje
-    if (listo && fotoURL) {
-      const a = document.createElement("a");
-      a.href = fotoURL; a.download = fotoNombreArchivo;
-      document.body.appendChild(a); a.click(); a.remove();
-      ayuda.textContent = "Se descargó tu hoja firmada. Adjúntala en el chat de WhatsApp que se abrió.";
-      ayuda.hidden = false;
+    // Computadora: la tarjeta se copia para pegarla en el chat y se abre WhatsApp con el mensaje
+    if (listo && fotoPNG && navigator.clipboard && window.ClipboardItem) {
+      navigator.clipboard.write([new ClipboardItem({ "image/png": fotoPNG })]).then(() => {
+        ayuda.textContent = "Tu tarjeta firmada quedó copiada: en el chat de WhatsApp pégala con Ctrl + V y envíala junto al mensaje.";
+        ayuda.hidden = false;
+      }).catch(() => {});
     }
     window.open(urlConfirmacion(nombre), "_blank", "noopener");
   }
