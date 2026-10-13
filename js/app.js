@@ -443,7 +443,8 @@
     return c;
   }
   async function prepararFoto(f) {
-    const lienzo = await crearFoto(f);
+    let lienzo;
+    try { lienzo = await crearFoto(f); } catch (e) { return; }
     const jpg = await new Promise(r => lienzo.toBlob(r, "image/jpeg", .93));
     const png = await new Promise(r => lienzo.toBlob(r, "image/png"));
     if (!jpg) return;
@@ -454,23 +455,49 @@
     try { fotoArchivo = new File([jpg], nombreArchivo, { type: "image/jpeg" }); } catch (e) { fotoArchivo = null; }
     fotoNombre = f.nombre; fotoNombreArchivo = nombreArchivo;
   }
+  function puedeCompartir() {
+    try { return !!(fotoArchivo && navigator.canShare && navigator.canShare({ files: [fotoArchivo] })); } catch (e) { return false; }
+  }
+  function esComputadora() { return !matchMedia("(pointer: coarse)").matches; }
+  // Muestra la tarjeta firmada dentro de la página para enviarla cuando el envío automático no fue posible
+  function mostrarParaCompartir(nombre, conBoton) {
+    const caja = $("compartirTarjeta");
+    $("tarjetaImg").src = fotoURL || "";
+    $("btnCompartirTarjeta").hidden = !conBoton;
+    $("btnCompartirTarjeta").onclick = () => enviarConfirmacion(nombre);
+    $("compartirAyuda").textContent = conBoton
+      ? "Toca el botón y elige WhatsApp: tu tarjeta firmada se envía junto con el mensaje."
+      : (esComputadora()
+          ? "Tu tarjeta firmada quedó copiada: en el chat de WhatsApp que se abrió, pégala con Ctrl + V y envíala junto al mensaje."
+          : "Este navegador no permite adjuntar la imagen sola. Mantén presionada tu tarjeta y elige Compartir → WhatsApp, o ábrela en Chrome o Safari.");
+    caja.hidden = false;
+  }
   function enviarConfirmacion(nombre) {
     const texto = mensajeConfirmacion(nombre);
-    const ayuda = $("fotoAyuda");
     const listo = fotoArchivo && fotoNombre === nombre;
-    // Teléfono: la tarjeta firmada y el mensaje se mandan juntos a WhatsApp
-    if (listo && navigator.canShare && navigator.canShare({ files: [fotoArchivo] })) {
-      navigator.share({ files: [fotoArchivo], text: texto }).then(() => { ayuda.hidden = true; })
-        .catch(err => { if (!err || err.name !== "AbortError") window.open(urlConfirmacion(nombre), "_blank", "noopener"); });
+    // 1) Tarjeta lista: se abre WhatsApp con la tarjeta firmada y el mensaje juntos
+    if (listo && puedeCompartir()) {
+      navigator.share({ files: [fotoArchivo], text: texto })
+        .then(() => { $("compartirTarjeta").hidden = true; })
+        .catch(err => { if (!err || err.name !== "AbortError") mostrarParaCompartir(nombre, true); });
       return;
     }
-    // Computadora: la tarjeta se copia para pegarla en el chat y se abre WhatsApp con el mensaje
-    if (listo && fotoPNG && navigator.clipboard && window.ClipboardItem) {
-      navigator.clipboard.write([new ClipboardItem({ "image/png": fotoPNG })]).then(() => {
-        ayuda.textContent = "Tu tarjeta firmada quedó copiada: en el chat de WhatsApp pégala con Ctrl + V y envíala junto al mensaje.";
-        ayuda.hidden = false;
-      }).catch(() => {});
+    // 2) La tarjeta aún se está creando: se termina y se ofrece enviarla
+    if (!listo) {
+      prepararFoto({ nombre, fecha: hoyTexto() }).then(() => {
+        if (puedeCompartir()) mostrarParaCompartir(nombre, true);
+        else enviarSinArchivos(nombre);
+      });
+      return;
     }
+    // 3) El navegador no deja compartir imágenes
+    enviarSinArchivos(nombre);
+  }
+  function enviarSinArchivos(nombre) {
+    if (fotoPNG && navigator.clipboard && window.ClipboardItem) {
+      navigator.clipboard.write([new ClipboardItem({ "image/png": fotoPNG })]).catch(() => {});
+    }
+    mostrarParaCompartir(nombre, false);
     window.open(urlConfirmacion(nombre), "_blank", "noopener");
   }
   // La hoja se prepara mientras la persona escribe su nombre, para enviarla al instante al firmar
@@ -479,7 +506,7 @@
     clearTimeout(temporizadorFoto);
     const nombre = $("inNombre").value.trim().replace(/\s+/g, " ");
     if (nombre.length < 2) return;
-    temporizadorFoto = setTimeout(() => prepararFoto({ nombre, fecha: hoyTexto() }), 350);
+    temporizadorFoto = setTimeout(() => prepararFoto({ nombre, fecha: hoyTexto() }), 120);
   });
   function hoyTexto() { return new Date().toLocaleDateString("es-DO", { day: "numeric", month: "long", year: "numeric" }); }
 
@@ -489,7 +516,7 @@
     $("firmaPie").textContent = f.nombre;
     $("firmaFecha").textContent = f.fecha;
     $("gracias").textContent = conAnimacion
-      ? "¡Gracias, " + f.nombre.split(" ")[0] + "! Tu lugar está reservado. Tu hoja firmada se envía junto con tu mensaje de WhatsApp."
+      ? "¡Gracias, " + f.nombre.split(" ")[0] + "! Tu lugar está reservado."
       : "¡Gracias, " + f.nombre.split(" ")[0] + "! Ya firmaste esta invitación.";
     const wa = $("waLink");
     wa.href = urlConfirmacion(f.nombre);
@@ -499,6 +526,7 @@
     wa.hidden = false;
     if (fotoNombre !== f.nombre) prepararFoto(f);
     wa.onclick = e => { e.preventDefault(); enviarConfirmacion(f.nombre); };
+    if (!conAnimacion) $("compartirTarjeta").hidden = true;
     if (conAnimacion && animar) {
       g.timeline()
         .fromTo("#firmaNombre", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 1.9, ease: "power1.inOut" })

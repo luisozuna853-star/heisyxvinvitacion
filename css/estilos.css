@@ -375,3 +375,7 @@
     .rama-sec { width: 22vh; }
     .info { max-width: 560px; }
   }
+  .compartir { margin: 1.4rem auto 0; display: flex; flex-direction: column; align-items: center; gap: .9rem; }
+  .compartir[hidden], .compartir .btn[hidden] { display: none; }
+  .compartir-img { display: block; width: min(300px, 92%); height: auto; border-radius: 4px; box-shadow: 0 12px 30px rgba(15,34,102,.25); -webkit-touch-callout: default; }
+  .compartir-ayuda { margin: 0; max-width: 34ch; font-size: 1rem; font-style: italic; line-height: 1.45; color: var(--tinta-suave); }
