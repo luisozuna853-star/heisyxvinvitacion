@@ -52,7 +52,7 @@
   .apertura-nota { margin: 0; font-size: 1rem; letter-spacing: .06em; color: var(--oro-claro); text-align: center; }
   .escenario { position: relative; }
   .sobre-wrap { perspective: 1600px; }
-  .sobre { position: relative; width: min(84vw, 440px); aspect-ratio: 3 / 2; transform-style: preserve-3d; }
+  .sobre { position: relative; width: min(84vw, 440px, 96vh); aspect-ratio: 3 / 2; transform-style: preserve-3d; }
   .sobre-dentro {
     position: absolute; inset: 0; border-radius: 4px;
     background: radial-gradient(circle, rgba(217,192,138,.4) .8px, transparent 1.4px) 0 0 / 10px 10px, linear-gradient(180deg, #0c1c58, #132c7c);
@@ -157,15 +157,6 @@
   .qr-marco .qr { position: absolute; left: 50%; top: 50%; width: 58%; transform: translate(-50%, -50%); background: #fffdf8; padding: 7px; border-radius: 2px; }
   .regalos .btn-cal { margin-top: 3.6rem; }
   .cierre .gracias-final { margin: 0 auto; text-align: center; max-width: 26ch; font-style: italic; font-size: clamp(1.2rem, 4.6vw, 1.45rem); line-height: 1.5; color: var(--marfil); }
-  @media (max-height: 720px) {
-    .portada-int { padding: 23vh 1rem 21vh; }
-    .corona { width: min(170px, 44vw); }
-    .te-invito { margin-top: .5rem; font-size: 1rem; }
-    .quince { font-size: 15vh; }
-    .portada .nombre-portada > span:last-child { font-size: 9.5vh; }
-    .frase { margin-top: .5rem; font-size: 1rem; }
-    .deco-port-i, .deco-port-d { width: 30vh; }
-  }
   @media (max-width: 380px) { .info-item { padding: .2rem .3rem; } .info-item p { letter-spacing: .06em; } }
   .deco { position: absolute; pointer-events: none; z-index: 0; }
   .deco svg { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 8px 14px rgba(0,0,0,.35)); }
@@ -321,6 +312,70 @@
     .esquina.a, .esquina.b { top: 17px; } .esquina.c, .esquina.d { bottom: 17px; }
     .esquina.a, .esquina.c { left: 17px; } .esquina.b, .esquina.d { right: 17px; }
     .estampa { width: 76px; font-size: .7rem; top: -30px; right: 0; }
+  }
+  @media (max-height: 720px) {
+    .portada-int { padding: 26vh 1rem 20vh; }
+    .corona { width: min(170px, 44vw); }
+    .te-invito { margin-top: .5rem; font-size: 1rem; }
+    .quince { font-size: 15vh; }
+    .portada .nombre-portada > span:last-child { font-size: 9.5vh; }
+    .frase { margin-top: .5rem; font-size: 1rem; }
+    .deco-port-i, .deco-port-d { width: 30vh; }
+  }
+  .foto-envio { margin: 1.6rem auto 0; display: flex; flex-direction: column; align-items: center; gap: .9rem; }
+  .foto-envio[hidden] { display: none; }
+  .foto-firma { display: block; width: min(240px, 70%); height: auto; border-radius: 6px; box-shadow: 0 12px 30px rgba(15,34,102,.25); }
+  .foto-ayuda { margin: 0; max-width: 32ch; font-size: .98rem; font-style: italic; color: var(--tinta-suave); line-height: 1.45; }
+  .foto-ayuda:empty { display: none; }
+  /* ---------- Responsive móvil ---------- */
+  html, body { overflow-x: hidden; max-width: 100%; }
+  main, .bloque, .cierre { overflow-x: clip; }
+  .apertura-tit, .te-invito, .frase, .titulo-seccion, .titulo-caps { overflow-wrap: break-word; text-wrap: balance; }
+  .portada { min-height: 0; }
+  @media (max-width: 360px) {
+    .apertura-tit { font-size: 1.05rem; }
+    .te-invito { letter-spacing: .18em; font-size: .95rem; }
+    .titulo-seccion { font-size: 2.5rem; }
+    .titulo-caps { letter-spacing: .14em; font-size: 1rem; }
+    .info-item p { font-size: .78rem; letter-spacing: .04em; }
+    .info-item p.dir { font-size: .85rem; }
+    .info-item svg { width: 26px; height: 26px; }
+    .cuenta div { min-width: 0; flex: 1; }
+    .cuenta b { font-size: 1.7rem; }
+    .cuenta span { font-size: .8rem; }
+    .tarjeta { padding-left: 1.1rem; padding-right: 1.1rem; }
+    .tarjeta h2 { font-size: 2.4rem; }
+    .btn, .btn-cal { padding-left: 1.2rem; padding-right: 1.2rem; font-size: .98rem; }
+    .deco-tarjeta { right: -20px !important; width: 96px !important; top: -52px !important; }
+  }
+  @media (max-height: 700px) and (orientation: portrait) {
+    .apertura { padding-bottom: 10vh; gap: 1rem; }
+    .sobre { width: min(78vw, 440px); }
+    .deco-ap-rama { width: 30vw; }
+  }
+  /* Teléfono acostado */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .apertura { padding: 7vh 1rem 5vh; gap: 2.5vh; }
+    .apertura-tit { font-size: 1rem; }
+    .apertura-nota { font-size: .9rem; }
+    .sobre { width: min(70vw, 86vh); }
+    .sombra-piso { margin-top: 6px; height: 12px; }
+    .deco-ap-ramo { width: 26vh !important; }
+    .deco-ap-libros { width: 46vh; }
+    .deco-ap-rama { width: 40vh; }
+    .portada-int { padding: 11vh 1rem 8vh; }
+    .corona { width: 110px; }
+    .te-invito { margin-top: .3rem; font-size: .85rem; }
+    .quince { font-size: 21vh; }
+    .divisor-quince { width: 220px; }
+    .portada .nombre-portada > span:last-child { font-size: 13vh; }
+    .frase { margin-top: .3rem; font-size: .9rem; max-width: 64ch; }
+    .frase br { display: none; }
+    .deco-port-i, .deco-port-d { width: 36vh; }
+    .deco-port-rama { width: 30vh; }
+    .bloque { padding: 3.5rem 0; }
+    .rama-sec { width: 22vh; }
+    .info { max-width: 560px; }
   }
 </style>
 </head>
@@ -481,6 +536,11 @@
         <div class="estampa" id="estampa" aria-hidden="true">Asistencia confirmada</div>
       </div>
       <p class="gracias" id="gracias" hidden aria-live="polite"></p>
+      <div class="foto-envio" id="fotoEnvio" hidden>
+        <img class="foto-firma" id="fotoFirma" alt="Tu confirmación firmada">
+        <button class="btn" id="btnEnviarFoto" type="button">Enviar foto por WhatsApp</button>
+        <p class="foto-ayuda" id="fotoAyuda"></p>
+      </div>
       <a class="wa" id="waLink" target="_blank" rel="noopener" hidden></a>
     </article>
   </section>
@@ -586,9 +646,10 @@
 
   /* ---------- WhatsApp ---------- */
   function urlWhatsApp(msg) { return "https://wa.me/" + CONFIG.whatsapp.replace(/\D/g, "") + "?text=" + encodeURIComponent(msg); }
-  function urlConfirmacion(nombre) {
-    return urlWhatsApp("¡Hola! Soy " + nombre + " y confirmo mi asistencia a los XV años de " + CONFIG.nombre + " el " + CONFIG.fecha + ". ¡Ahí estaré! 👑");
+  function mensajeConfirmacion(nombre) {
+    return "¡Hola! Soy " + nombre + " y confirmo mi asistencia a los XV años de " + CONFIG.nombre + " el " + CONFIG.fecha + ". ¡Ahí estaré! 👑";
   }
+  function urlConfirmacion(nombre) { return urlWhatsApp(mensajeConfirmacion(nombre)); }
 
   /* ---------- Sello, mariposas y reloj ---------- */
   function selloSVG() {
@@ -874,10 +935,124 @@
     const f = { ...datos, fecha };
     guardarFirma(f);
     mostrarFirma(f, true);
-    window.open(urlConfirmacion(f.nombre), "_blank", "noopener");
   }
   $("btnFirmar").addEventListener("click", firmar);
   $("inNombre").addEventListener("keydown", e => { if (e.key === "Enter") firmar(); });
+
+  /* ---------- Foto de la confirmación firmada ---------- */
+  let fotoArchivo = null, fotoURL = null;
+  function cargarImg(src) {
+    return new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
+  }
+  function textoEspaciado(x, txt, cx, y, esp) {
+    if ("letterSpacing" in x) { x.letterSpacing = esp + "px"; x.fillText(txt, cx + esp / 2, y); x.letterSpacing = "0px"; return; }
+    x.fillText(txt.split("").join(String.fromCharCode(8202)), cx, y);
+  }
+  async function crearFoto(f) {
+    try {
+      await Promise.all([
+        document.fonts.load('120px "Pinyon Script"'),
+        document.fonts.load('500 60px "Cormorant Garamond"'),
+        document.fonts.load('italic 40px "Cormorant Garamond"'),
+        document.fonts.load('600 40px "Cormorant Garamond"')
+      ]);
+    } catch (e) {}
+    const W = 1080, H = 1350, c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    const x = c.getContext("2d");
+    const serif = '"Cormorant Garamond", Georgia, serif', script = '"Pinyon Script", "Snell Roundhand", cursive';
+    // Fondo azul rey
+    const fondo = x.createRadialGradient(W / 2, H * .38, 60, W / 2, H * .45, H * .85);
+    fondo.addColorStop(0, "#24459f"); fondo.addColorStop(1, "#0b1a52");
+    x.fillStyle = fondo; x.fillRect(0, 0, W, H);
+    // Marco dorado
+    x.strokeStyle = "#c9a85e"; x.lineWidth = 3; x.strokeRect(38, 38, W - 76, H - 76);
+    x.lineWidth = 1.2; x.globalAlpha = .7; x.strokeRect(54, 54, W - 108, H - 108); x.globalAlpha = 1;
+    // Ramas de flores en dos esquinas
+    const rama = await cargarImg(FLORES.rama);
+    if (rama) {
+      const rw = 250, rh = rw * rama.height / rama.width;
+      x.save(); x.translate(-8, -8 + rh); x.scale(1, -1); x.drawImage(rama, 0, 0, rw, rh); x.restore();
+      x.save(); x.translate(W + 8, H + 8 - rh); x.scale(-1, 1); x.drawImage(rama, 0, 0, rw, rh); x.restore();
+    }
+    const oro = (y0, y1) => { const gr = x.createLinearGradient(0, y0, 0, y1); gr.addColorStop(0, "#efdfb2"); gr.addColorStop(.5, "#d1b16a"); gr.addColorStop(1, "#a7843d"); return gr; };
+    x.textAlign = "center"; x.textBaseline = "alphabetic";
+    // Encabezado
+    x.fillStyle = "#e3cf9e"; x.font = "500 32px " + serif;
+    textoEspaciado(x, "CONFIRMACIÓN DE ASISTENCIA", W / 2, 190, 7);
+    x.fillStyle = oro(230, 430); x.font = "400 220px " + serif;
+    x.fillText("XV", W / 2, 420);
+    x.fillStyle = oro(450, 560); x.font = "110px " + script;
+    x.fillText(CONFIG.nombre, W / 2, 545);
+    x.fillStyle = "#f2ebdc"; x.font = "italic 38px " + serif;
+    x.fillText(CONFIG.fecha.charAt(0).toUpperCase() + CONFIG.fecha.slice(1) + ", " + CONFIG.hora, W / 2, 615);
+    // Tarjeta marfil con la firma
+    const tx = 130, ty = 675, tw = W - 260, th = 470;
+    x.shadowColor = "rgba(0,0,0,.35)"; x.shadowBlur = 40; x.shadowOffsetY = 18;
+    x.fillStyle = "#fffdf8"; x.fillRect(tx, ty, tw, th);
+    x.shadowColor = "transparent";
+    x.strokeStyle = "#b8954a"; x.lineWidth = 2; x.strokeRect(tx + 16, ty + 16, tw - 32, th - 32);
+    x.lineWidth = 1; x.globalAlpha = .5; x.strokeRect(tx + 24, ty + 24, tw - 48, th - 48); x.globalAlpha = 1;
+    x.fillStyle = "#575f82"; x.font = "italic 36px " + serif;
+    x.fillText("Firmado por", W / 2, ty + 105);
+    let tam = 120; x.font = tam + "px " + script;
+    while (x.measureText(f.nombre).width > tw - 140 && tam > 60) { tam -= 6; x.font = tam + "px " + script; }
+    x.fillStyle = "#0f2266"; x.fillText(f.nombre, W / 2, ty + 255);
+    x.strokeStyle = "#b8954a"; x.lineWidth = 2; x.beginPath(); x.moveTo(tx + 110, ty + 285); x.lineTo(tx + tw - 110, ty + 285); x.stroke();
+    x.fillStyle = "#575f82"; x.font = "italic 32px " + serif;
+    x.fillText("Confirmado el " + f.fecha, W / 2, ty + 345);
+    x.fillStyle = "#1c3a9c"; x.font = "600 30px " + serif;
+    textoEspaciado(x, "¡AHÍ ESTARÉ!", W / 2, ty + 405, 5);
+    // Sello dorado
+    x.save(); x.translate(tx + tw - 70, ty + 40); x.rotate(-12 * Math.PI / 180);
+    const sello = x.createRadialGradient(-25, -25, 10, 0, 0, 95);
+    sello.addColorStop(0, "#f2e1b0"); sello.addColorStop(.6, "#c9a85e"); sello.addColorStop(1, "#8d6e2e");
+    x.shadowColor = "rgba(0,0,0,.3)"; x.shadowBlur = 16; x.shadowOffsetY = 6;
+    x.fillStyle = sello; x.beginPath(); x.arc(0, 0, 90, 0, Math.PI * 2); x.fill();
+    x.shadowColor = "transparent";
+    x.strokeStyle = "rgba(255,243,196,.7)"; x.lineWidth = 2; x.beginPath(); x.arc(0, 0, 76, 0, Math.PI * 2); x.stroke();
+    x.fillStyle = "#0f2266"; x.font = "700 24px " + serif;
+    x.fillText("ASISTENCIA", 0, -4); x.fillText("CONFIRMADA", 0, 26);
+    x.restore();
+    // Pie
+    x.fillStyle = "#e3cf9e"; x.font = "italic 34px " + serif;
+    x.fillText("Te espero en el País de las Maravillas", W / 2, H - 120);
+    return new Promise(res => c.toBlob(b => res(b), "image/jpeg", .92));
+  }
+  async function prepararFoto(f) {
+    const blob = await crearFoto(f);
+    if (!blob) return;
+    if (fotoURL) URL.revokeObjectURL(fotoURL);
+    fotoURL = URL.createObjectURL(blob);
+    const nombreArchivo = "confirmacion-xv-" + f.nombre.toLowerCase().replace(/[^a-z0-9áéíóúñü]+/gi, "-") + ".jpg";
+    try { fotoArchivo = new File([blob], nombreArchivo, { type: "image/jpeg" }); } catch (e) { fotoArchivo = null; }
+    $("fotoFirma").src = fotoURL;
+    $("fotoEnvio").hidden = false;
+    $("btnEnviarFoto").dataset.nombre = f.nombre;
+    $("btnEnviarFoto").dataset.archivo = nombreArchivo;
+  }
+  $("btnEnviarFoto").addEventListener("click", async () => {
+    const nombre = $("btnEnviarFoto").dataset.nombre || "";
+    const texto = mensajeConfirmacion(nombre);
+    const ayuda = $("fotoAyuda");
+    if (fotoArchivo && navigator.canShare && navigator.canShare({ files: [fotoArchivo] })) {
+      try {
+        await navigator.share({ files: [fotoArchivo], text: texto });
+        ayuda.textContent = "";
+        return;
+      } catch (e) {
+        if (e && e.name === "AbortError") return;
+      }
+    }
+    // Sin compartir archivos (computadora o navegador que no lo permite): se descarga la foto y se abre el chat
+    if (fotoURL) {
+      const a = document.createElement("a");
+      a.href = fotoURL; a.download = $("btnEnviarFoto").dataset.archivo || "confirmacion-xv.jpg";
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+    window.open(urlConfirmacion(nombre), "_blank", "noopener");
+    ayuda.textContent = "Se descargó la foto de tu confirmación. Adjúntala en el chat de WhatsApp que se abrió.";
+  });
 
   function mostrarFirma(f, conAnimacion) {
     $("confirmar").hidden = true;
@@ -885,19 +1060,20 @@
     $("firmaPie").textContent = f.nombre;
     $("firmaFecha").textContent = f.fecha;
     $("gracias").textContent = conAnimacion
-      ? "¡Gracias, " + f.nombre.split(" ")[0] + "! Tu lugar está reservado. Se abrió WhatsApp con tu confirmación: solo pulsa enviar."
+      ? "¡Gracias, " + f.nombre.split(" ")[0] + "! Tu lugar está reservado. Envía la foto de tu invitación firmada por WhatsApp para confirmar."
       : "¡Gracias, " + f.nombre.split(" ")[0] + "! Ya firmaste esta invitación.";
     const wa = $("waLink");
     wa.href = urlConfirmacion(f.nombre);
-    wa.textContent = conAnimacion ? "¿No se abrió WhatsApp? Envía tu confirmación aquí" : "Reenviar confirmación por WhatsApp";
+    wa.textContent = "o enviar solo el mensaje de texto";
     $("firma").hidden = false;
     $("gracias").hidden = false;
     wa.hidden = false;
+    prepararFoto(f);
     if (conAnimacion && animar) {
       g.timeline()
         .fromTo("#firmaNombre", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 1.9, ease: "power1.inOut" })
         .fromTo("#estampa", { scale: 1.6, rotation: -20, opacity: 0 }, { scale: 1, rotation: -12, opacity: 1, duration: .5, ease: "power3.out" })
-        .from(["#gracias", "#waLink"], { y: 16, opacity: 0, stagger: .15, duration: .6 }, "-=.1");
+        .from(["#gracias", "#fotoEnvio", "#waLink"], { y: 16, opacity: 0, stagger: .15, duration: .6 }, "-=.1");
       $("firma").scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }
